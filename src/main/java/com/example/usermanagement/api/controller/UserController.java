@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.usermanagement.api.service.UserService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +22,17 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userRepository.save(user));
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     @GetMapping
@@ -39,5 +48,12 @@ public class UserController {
         response.put("totalPages", userPage.getTotalPages());
 
         return response;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

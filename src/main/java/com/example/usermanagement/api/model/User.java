@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 public class User {
+    public User() {
+
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +27,29 @@ public class User {
 
     private String role;
 
+    public @NotBlank(message = "Name is required") String getName() {
+        return name;
+    }
+
+    public @NotBlank(message = "Email is required") @Email(message = "Email format is invalid") String getEmail() {
+        return email;
+    }
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public Long getId() {
+        return id;
+    }
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+
 }
