@@ -13,9 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import java.util.Arrays;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,7 +66,6 @@ public class UserControllerTest {
 //        System.out.println("User1 ID: " + user1.getId());
 //        System.out.println("Total users in DB: " + userRepository.count());
 
-
     }
 
     @Test
@@ -101,10 +102,19 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.email",is("green@example.com")));
     }
 
-    void testDeleteUserFound{
+    @Test
+    void testDeleteUserFound() throws Exception {
+        mockMvc.perform(delete("/api/users/{id}",user2.getId())).andExpect(status().isNoContent());
+        assertFalse(userRepository.existsById(user1.getId()));
+        long initialUserCount = userRepository.count();
+        assertEquals(initialUserCount-1,userRepository.count());
 
     }
-    void testDeleteUserNotFound{
-
+    @Test
+    void testDeleteUserNotFound() throws Exception{
+        Long nonExistedId=user1.getId()+101;
+        mockMvc.perform(delete("/api/users/{id}",nonExistedId)).andExpect(status().isNotFound());
+        long initialUserCount = userRepository.count();
+        assertEquals(initialUserCount,userRepository.count());
     }
 }
