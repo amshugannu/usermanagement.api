@@ -59,4 +59,28 @@ public class UserRepositoryTest {
         assertThat(saveduser.getId()).isNotNull();
         assertThat(saveduser.getName()).isEqualTo("Charlie Chaplin");
     }
+
+    @Test
+    void testUpdateUserRecord(){
+        Optional<User> optionalUser = userRepository.findById(user1.getId());
+        assertThat(optionalUser).isPresent();
+
+        User user3 = optionalUser.get();
+
+        String newName = "Kieron Pollard";
+        String newEmail = "pollard@example.com";
+
+        user3.setName(newName);
+        user3.setEmail(newEmail);
+
+        userRepository.save(user3);
+
+        Optional<User> updatedUserOptional = userRepository.findById(user1.getId());
+        assertThat(updatedUserOptional).isPresent();
+
+        User updatedUser = updatedUserOptional.get();
+        assertThat(updatedUser.getEmail()).isEqualTo(newEmail);
+        assertThat(updatedUser.getName()).isEqualTo(newName);
+
+    }
 }
