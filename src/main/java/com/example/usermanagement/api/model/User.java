@@ -14,6 +14,11 @@ public class User {
 
     }
 
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,12 +32,28 @@ public class User {
 
     private String role;
 
+    public String getRole() {
+        return role;
+    }
+
     public @NotBlank(message = "Name is required") String getName() {
         return name;
     }
 
     public @NotBlank(message = "Email is required") @Email(message = "Email format is invalid") String getEmail() {
         return email;
+    }
+
+    public void setName(@NotBlank(message = "Name is required") String name) {
+        this.name = name;
+    }
+
+    public void setEmail(@NotBlank(message = "Email is required") @Email(message = "Email format is invalid") String email) {
+        this.email = email;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @CreationTimestamp
@@ -45,11 +66,4 @@ public class User {
     public Long getId() {
         return id;
     }
-
-    public User(String name, String email) {
-        this.name = name;
-        this.email = email;
-    }
-
-
 }
