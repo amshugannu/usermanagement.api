@@ -2,10 +2,22 @@ package com.example.usermanagement.api.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
 public class User {
+    public User() {
+
+    }
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,24 +32,42 @@ public class User {
 
     private String role;
 
-    public User() {}
+    public String getRole() {
+        return role;
+    }
 
-    public User(String name, String email, String role) {
+    public @NotBlank(message = "Name is required") String getName() {
+        return name;
+    }
+
+    public @NotBlank(message = "Email is required") @Email(message = "Email format is invalid") String getEmail() {
+        return email;
+    }
+
+    public void setName(@NotBlank(message = "Name is required") String name) {
         this.name = name;
+    }
+
+    public void setEmail(@NotBlank(message = "Email is required") @Email(message = "Email format is invalid") String email) {
         this.email = email;
+    }
+
+    public void setRole(String role) {
         this.role = role;
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+
+
+
 }
