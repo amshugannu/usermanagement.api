@@ -104,9 +104,10 @@ public class UserControllerTest {
 
     @Test
     void testDeleteUserFound() throws Exception {
+        long initialUserCount = userRepository.count();
         mockMvc.perform(delete("/api/users/{id}",user1.getId())).andExpect(status().isNoContent());
         assertFalse(userRepository.existsById(user1.getId()));
-        long initialUserCount = userRepository.count();
+
         assertEquals(initialUserCount-1,userRepository.count());
 
     }
